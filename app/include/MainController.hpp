@@ -12,6 +12,8 @@ namespace app {
         std::string_view name() const override;
 
     private:
+        bool loop() override;
+
         void initialize() override;
     };
 } // app
