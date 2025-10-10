@@ -2,7 +2,8 @@
 #version 330 core
 
 layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoords;
+layout (location = 1) in vec3 aNormal;
+layout (location = 2) in vec2 aTexCoords;
 
 out vec2 TexCoords;
 out vec3 FragPos;
@@ -24,8 +25,9 @@ in vec2 TexCoords;
 
 out vec4 FragColor;
 
-uniform sampler2D diffuse;
+uniform sampler2D texture_diffuse1;
 
 void main() {
-    FragColor = vec4(texture(diffuse, TexCoords).rgb, 1.0);
+    FragColor = vec4(texture(texture_diffuse1, TexCoords).rgb, 1.0);
+    //    FragColor = vec4(TexCoords, 0.0, 1.0);
 }

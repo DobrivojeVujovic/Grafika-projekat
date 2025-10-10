@@ -2,13 +2,14 @@
   "resources": {
     "models": {
       "watchtower": {
-        "path": "tower/watchtower.obj"
+        "path": "tower/watchtower.obj",
+        "flip_uvs": true
       }
     }
   },
   "window": {
-    "height": 600,
+    "height": 900,
     "title": "Hello, window!",
-    "width": 800
+    "width": 1600
   }
 }
