@@ -12,9 +12,17 @@ namespace app {
         std::string_view name() const override;
 
     private:
+        void initialize() override;
+
         bool loop() override;
 
-        void initialize() override;
+        void draw_watchtower();
+
+        void begin_draw() override;
+
+        void draw() override;
+
+        void end_draw() override;
     };
 } // app
 
