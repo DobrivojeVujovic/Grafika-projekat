@@ -36,6 +36,36 @@ namespace app {
 
     }
 
+    void MainController::update_camera() {
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+        auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto camera   = graphics->camera();
+
+        float dt = platform->dt();
+        if (platform->key(engine::platform::KEY_W).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
+        }
+        if (platform->key(engine::platform::KEY_S).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt);
+        }
+        if (platform->key(engine::platform::KEY_A).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt);
+        }
+        if (platform->key(engine::platform::KEY_D).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
+        }
+        if (platform->key(engine::platform::KEY_LEFT_CONTROL).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt);
+        }
+        if (platform->key(engine::platform::KEY_SPACE).is_down()) {
+            camera->move_camera(engine::graphics::Camera::Movement::UP, dt);
+        }
+    }
+
+    void MainController::update() {
+        update_camera();
+    }
+
     void MainController::draw_watchtower() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();

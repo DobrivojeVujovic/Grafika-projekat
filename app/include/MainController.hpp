@@ -16,6 +16,10 @@ namespace app {
 
         bool loop() override;
 
+        void update_camera();
+
+        void update() override;
+
         void draw_watchtower();
 
         void begin_draw() override;
