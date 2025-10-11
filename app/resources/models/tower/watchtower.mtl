@@ -10,4 +10,4 @@ Ni 1.000000
 d 1.000000
 illum 1
 map_Kd textures/diffuse.jpg
-bump textures/normals.jpg
+norm textures/normals.jpg

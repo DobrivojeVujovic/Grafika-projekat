@@ -39,6 +39,8 @@ namespace app {
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
         engine::graphics::OpenGL::enable_depth_testing();
+        // GLFWwindow *window_handle = platform->window()->handle_();
+        // glfwSetInputMode(window_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         spdlog::info("MainController initialized");
     }
 
@@ -103,6 +105,10 @@ namespace app {
         model           = glm::translate(model, glm::vec3(0.0f, -5.0f, -10.0f));
         model           = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader->set_mat4("model", model);
+
+        shader->set_vec3("sun.direction", glm::vec3(1.0f, 0.0f, 1.0f));
+        shader->set_vec3("sun.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
+        shader->set_vec3("sun.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
         watchtower->draw(shader);
     }
 
