@@ -106,9 +106,10 @@ namespace app {
         model           = glm::translate(model, glm::vec3(5.0f, -5.0f, -5.0f));
         shader->set_mat4("model", model);
 
-        shader->set_vec3("sun.direction", glm::vec3(1.0f, 0.0f, 1.0f));
-        shader->set_vec3("sun.ambient", glm::vec3(0.9f, 0.9f, 0.9f));
-        shader->set_vec3("sun.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
+        shader->set_vec3("sun.direction", m_sun_direction);
+        shader->set_vec3("sun.diffuse", m_sun_color * m_sun_brightness);
+        shader->set_vec3("sun.ambient", m_sun_ambient * m_sun_brightness);
+
         hut->draw(shader);
     }
 
@@ -130,12 +131,12 @@ namespace app {
         model           = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader->set_mat4("model", model);
 
-        shader->set_vec3("sun.direction", glm::vec3(1.0f, 0.0f, 1.0f));
-        shader->set_vec3("sun.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-        shader->set_vec3("sun.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-        shader->set_vec3("sun.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->set_vec3("sun.direction", m_sun_direction);
+        shader->set_vec3("sun.diffuse", m_sun_color * m_sun_brightness);
+        shader->set_vec3("sun.ambient", m_sun_ambient * m_sun_brightness);
+        shader->set_vec3("sun.specular", m_sun_specular * m_sun_brightness);
 
-        shader->set_float("shininess", 300);
+        shader->set_float("shininess", 64);
         shader->set_vec3("cameraPos", graphics->camera()->Position);
 
         watchtower->draw(shader);

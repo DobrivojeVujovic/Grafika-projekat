@@ -7,6 +7,7 @@
 
 #include "GUIController.hpp"
 
+#include <MainController.hpp>
 #include <imgui.h>
 
 namespace app {
@@ -28,9 +29,28 @@ namespace app {
 
     void GUIController::draw() {
         auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto main     = engine::core::Controller::get<MainController>();
         graphics->begin_gui();
 
         ImGui::Begin("Main GUI");
+
+        ImGui::Text("Sun Properties");
+
+        ImGui::SliderFloat3("Direction", &main->m_sun_direction[0], -1.0f, 1.0f);
+        main->m_sun_direction = glm::normalize(main->m_sun_direction);
+
+        ImGui::ColorEdit3("Color", &main->m_sun_color[0]);
+
+        static float _shininess = 0.1;
+        ImGui::SliderFloat("Shininess", &_shininess, 0.0f, 1.0f);
+        main->m_sun_specular = glm::vec3(_shininess, _shininess, _shininess);
+
+        static float _ambient = 0.1;
+        ImGui::SliderFloat("Ambient Strength", &_ambient, 0.05f, 0.8f);
+        main->m_sun_ambient = glm::vec3(_ambient, _ambient, _ambient);
+
+        ImGui::SliderFloat("Brightness", &main->m_sun_brightness, 0.1f, 1);
+
         ImGui::End();
         graphics->end_gui();
     }

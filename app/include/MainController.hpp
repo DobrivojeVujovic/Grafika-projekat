@@ -5,9 +5,10 @@
 #ifndef MAINCONTROLLER_HPP
 #define MAINCONTROLLER_HPP
 #include <engine/core/Controller.hpp>
+#include <glm/glm.hpp>
 
 namespace app {
-    class MainController : public engine::core::Controller {
+    class MainController final : public engine::core::Controller {
     public:
         std::string_view name() const override;
 
@@ -29,6 +30,14 @@ namespace app {
         void draw() override;
 
         void end_draw() override;
+
+    public:
+        glm::vec3 m_sun_direction{1.0f, 0.5f, 1.0f};
+        glm::vec3 m_sun_color{1.0f, 1.0f, 1.0f};
+        glm::vec3 m_sun_ambient{0.1f, 0.1f, 0.1f};
+        glm::vec3 m_sun_specular{0.5f, 0.5f, 0.5f};
+        float m_sun_brightness{0.5f};
+
     };
 } // app
 
