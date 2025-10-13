@@ -56,7 +56,6 @@ namespace app {
     }
 
     void MainController::update_camera() {
-        //[TODO] add movement speed contorls
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (gui_controller->is_enabled())
             return;
@@ -65,24 +64,28 @@ namespace app {
         auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
         auto camera   = graphics->camera();
 
-        float dt = platform->dt();
+        float dt                  = platform->dt();
+        float cameraSpeedModifier = 1.0f;
+        if (platform->key(engine::platform::KEY_LEFT_SHIFT).is_down())
+            cameraSpeedModifier = 0.3f;
+
         if (platform->key(engine::platform::KEY_W).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::FORWARD, cameraSpeedModifier * dt);
         }
         if (platform->key(engine::platform::KEY_S).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, cameraSpeedModifier * dt);
         }
         if (platform->key(engine::platform::KEY_A).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::LEFT, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::LEFT, cameraSpeedModifier * dt);
         }
         if (platform->key(engine::platform::KEY_D).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::RIGHT, cameraSpeedModifier * dt);
         }
         if (platform->key(engine::platform::KEY_LEFT_CONTROL).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::DOWN, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::DOWN, cameraSpeedModifier * dt);
         }
         if (platform->key(engine::platform::KEY_SPACE).is_down()) {
-            camera->move_camera(engine::graphics::Camera::Movement::UP, dt);
+            camera->move_camera(engine::graphics::Camera::Movement::UP, cameraSpeedModifier * dt);
         }
     }
 
