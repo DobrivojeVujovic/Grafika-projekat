@@ -4,7 +4,6 @@
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
-//layout (location = 3) in vec3 lightPos;
 
 
 out vec2 TexCoords;
@@ -33,7 +32,7 @@ in vec3 Normal;
 out vec4 FragColor;
 
 uniform sampler2D texture_diffuse1;
-
+uniform sampler2D texture_opacity1;
 struct DirLight {
     vec3 direction;
     vec3 ambient;
@@ -55,6 +54,9 @@ void main() {
 
     // no specular component
 
+    float opacity = texture2D(texture_opacity1, TexCoords).r;
+    if (opacity < 0.1)
+    discard;
+
     FragColor = vec4(ambient + diffuse, 1.0);
-    //    FragColor = vec4(TexCoords, 0.0, 1.0);
 }
