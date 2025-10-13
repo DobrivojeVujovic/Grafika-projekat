@@ -4,6 +4,17 @@
       "watchtower": {
         "path": "tower/watchtower.obj",
         "flip_uvs": true
+      },
+      "tree": {
+        "path": "tree/tree.obj"
+      },
+      "hut": {
+        "path": "hut/hut.obj",
+        "flip_uvs": true
+      },
+      "axe": {
+        "path": "axe/axe.obj",
+        "flip_uvs": true
       }
     }
   },
