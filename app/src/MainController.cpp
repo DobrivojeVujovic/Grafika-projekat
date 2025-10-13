@@ -39,6 +39,7 @@ namespace app {
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
         engine::graphics::OpenGL::enable_depth_testing();
+
         // GLFWwindow *window_handle = platform->window()->handle_();
         // glfwSetInputMode(window_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         spdlog::info("MainController initialized");
@@ -55,6 +56,7 @@ namespace app {
     }
 
     void MainController::update_camera() {
+        //[TODO] add movement speed contorls
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (gui_controller->is_enabled())
             return;
@@ -88,27 +90,54 @@ namespace app {
         update_camera();
     }
 
-    void MainController::draw_watchtower() {
+    void MainController::draw_hut() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
         //Model
-        engine::resources::Model *watchtower = resources->model("watchtower");
+        engine::resources::Model *hut = resources->model("hut");
         //Shader
-        engine::resources::Shader *shader = resources->shader("watchtower");
+        engine::resources::Shader *shader = resources->shader("basicAlphaTest");
 
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::scale(model, glm::vec3(0.5f));
+        model           = glm::translate(model, glm::vec3(5.0f, -5.0f, -5.0f));
+        shader->set_mat4("model", model);
+
+        shader->set_vec3("sun.direction", glm::vec3(1.0f, 0.0f, 1.0f));
+        shader->set_vec3("sun.ambient", glm::vec3(0.9f, 0.9f, 0.9f));
+        shader->set_vec3("sun.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
+        hut->draw(shader);
+    }
+
+    void MainController::draw_axe() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        //Model
+        engine::resources::Model *watchtower = resources->model("axe");
+        //Shader
+        engine::resources::Shader *shader = resources->shader("phong");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model           = glm::scale(model, glm::vec3(0.1f));
         model           = glm::translate(model, glm::vec3(0.0f, -5.0f, -10.0f));
         model           = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
         shader->set_mat4("model", model);
 
         shader->set_vec3("sun.direction", glm::vec3(1.0f, 0.0f, 1.0f));
         shader->set_vec3("sun.ambient", glm::vec3(0.1f, 0.1f, 0.1f));
-        shader->set_vec3("sun.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
+        shader->set_vec3("sun.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+        shader->set_vec3("sun.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+
+        shader->set_float("shininess", 300);
+        shader->set_vec3("cameraPos", graphics->camera()->Position);
+
         watchtower->draw(shader);
     }
 
@@ -122,7 +151,8 @@ namespace app {
     }
 
     void MainController::draw() {
-        draw_watchtower();
+        draw_hut();
+        draw_axe();
     }
 
 } // app

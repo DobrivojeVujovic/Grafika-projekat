@@ -20,7 +20,9 @@ namespace app {
 
         void update() override;
 
-        void draw_watchtower();
+        void draw_hut();
+
+        void draw_axe();
 
         void begin_draw() override;
 
