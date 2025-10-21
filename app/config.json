@@ -15,6 +15,10 @@
       "axe": {
         "path": "axe/axe.obj",
         "flip_uvs": true
+      },
+      "fireplace": {
+        "path": "fireplace/fireplace.obj",
+        "flip_uvs": true
       }
     }
   },
