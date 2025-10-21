@@ -21,6 +21,8 @@ namespace app {
 
         void update() override;
 
+        void draw_fireplace();
+
         void draw_hut();
 
         void draw_axe();
@@ -32,11 +34,11 @@ namespace app {
         void end_draw() override;
 
     public:
-        glm::vec3 m_sun_direction{1.0f, 0.5f, 1.0f};
-        glm::vec3 m_sun_color{1.0f, 1.0f, 1.0f};
-        glm::vec3 m_sun_ambient{0.1f, 0.1f, 0.1f};
-        glm::vec3 m_sun_specular{0.5f, 0.5f, 0.5f};
-        float m_sun_brightness{0.5f};
+        glm::vec3 m_moon_direction{1.0f, 1.0f, 1.0f};
+        glm::vec3 m_moon_color{1.0f, 1.0f, 1.0f};
+        glm::vec3 m_moon_ambient{0.1f, 0.1f, 0.1f};
+        glm::vec3 m_moon_specular{0.5f, 0.5f, 0.5f};
+        float m_moon_brightness{0.9f};
 
     };
 } // app

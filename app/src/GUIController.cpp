@@ -34,22 +34,22 @@ namespace app {
 
         ImGui::Begin("Main GUI");
 
-        ImGui::Text("Sun Properties");
+        ImGui::Text("Moon Properties");
 
-        ImGui::SliderFloat3("Direction", &main->m_sun_direction[0], -1.0f, 1.0f);
-        main->m_sun_direction = glm::normalize(main->m_sun_direction);
+        ImGui::SliderFloat3("Direction", &main->m_moon_direction[0], -1.0f, 1.0f);
+        // main->m_sun_direction = glm::normalize(main->m_sun_direction);
 
-        ImGui::ColorEdit3("Color", &main->m_sun_color[0]);
+        ImGui::ColorEdit3("Color", &main->m_moon_color[0]);
 
         static float _shininess = 0.1;
         ImGui::SliderFloat("Shininess", &_shininess, 0.0f, 1.0f);
-        main->m_sun_specular = glm::vec3(_shininess, _shininess, _shininess);
+        main->m_moon_specular = glm::vec3(_shininess, _shininess, _shininess);
 
         static float _ambient = 0.1;
         ImGui::SliderFloat("Ambient Strength", &_ambient, 0.05f, 0.8f);
-        main->m_sun_ambient = glm::vec3(_ambient, _ambient, _ambient);
+        main->m_moon_ambient = glm::vec3(_ambient, _ambient, _ambient);
 
-        ImGui::SliderFloat("Brightness", &main->m_sun_brightness, 0.1f, 1);
+        ImGui::SliderFloat("Brightness", &main->m_moon_brightness, 0.1f, 1);
 
         ImGui::End();
         graphics->end_gui();

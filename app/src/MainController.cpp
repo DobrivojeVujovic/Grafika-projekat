@@ -93,25 +93,66 @@ namespace app {
         update_camera();
     }
 
+    void MainController::draw_fireplace() {
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
+
+        engine::resources::Model *fireplace = resources->model("fireplace");
+        engine::resources::Shader *shader   = resources->shader("fireplace");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        glm::mat4 model = glm::mat4(0.5f);
+        shader->set_mat4("model", model);
+        shader->set_float("time", platform->frame_time().current);
+
+        fireplace->draw(shader);
+    }
+
     void MainController::draw_hut() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+        auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
+
         //Model
         engine::resources::Model *hut = resources->model("hut");
         //Shader
-        engine::resources::Shader *shader = resources->shader("basicAlphaTest");
+        engine::resources::Shader *shader = resources->shader("hut");
 
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::translate(model, glm::vec3(5.0f, -5.0f, -5.0f));
+        model           = glm::translate(model, glm::vec3(3.0f, 0.0f, 0.0f));
         shader->set_mat4("model", model);
 
-        shader->set_vec3("sun.direction", m_sun_direction);
-        shader->set_vec3("sun.diffuse", m_sun_color * m_sun_brightness);
-        shader->set_vec3("sun.ambient", m_sun_ambient * m_sun_brightness);
+        //Direkciono svetlo
+        shader->set_vec3("dirLight.direction", m_moon_direction);
+        shader->set_vec3("dirLight.diffuse", m_moon_color * m_moon_brightness);
+        shader->set_vec3("dirLight.ambient", m_moon_ambient * m_moon_brightness);
+        shader->set_vec3("dirLight.specular", m_moon_specular * m_moon_brightness);
+
+        //Point svetlo
+        shader->set_vec3("pointLight.position", glm::vec3(0.0f, 0.0f, 0.0f));
+        // Boje – topla paleta vatre
+        shader->set_vec3("pointLight.ambient", glm::vec3(0.15f, 0.05f, 0.01f)); // slabo osvetljenje okoline
+        shader->set_vec3("pointLight.diffuse", glm::vec3(1.0f, 0.45f, 0.05f));  // narandžasto/žuto jezgro
+        shader->set_vec3("pointLight.specular", glm::vec3(1.0f, 0.9f, 0.7f));   // topli odsjaj
+
+        // Attenuation
+        shader->set_float("pointLight.constant", 1.0f);
+        shader->set_float("pointLight.linear", 0.14f);
+        shader->set_float("pointLight.quadratic", 0.07f);
+
+        shader->set_float("shininess", 0);
+
+        shader->set_float("time", platform->frame_time().current);
+
+        shader->set_vec3("cameraPos", graphics->camera()->Position);
 
         hut->draw(shader);
     }
@@ -119,27 +160,44 @@ namespace app {
     void MainController::draw_axe() {
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
-        //Model
+        auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
+
         engine::resources::Model *watchtower = resources->model("axe");
-        //Shader
-        engine::resources::Shader *shader = resources->shader("phong");
+        engine::resources::Shader *shader    = resources->shader("axe");
 
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
+        //Model matrica
         glm::mat4 model = glm::mat4(1.0f);
-        model           = glm::scale(model, glm::vec3(0.1f));
-        model           = glm::translate(model, glm::vec3(0.0f, -5.0f, -10.0f));
+        model           = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
         model           = glm::rotate(model, glm::radians(45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+        model           = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
         shader->set_mat4("model", model);
 
-        shader->set_vec3("sun.direction", m_sun_direction);
-        shader->set_vec3("sun.diffuse", m_sun_color * m_sun_brightness);
-        shader->set_vec3("sun.ambient", m_sun_ambient * m_sun_brightness);
-        shader->set_vec3("sun.specular", m_sun_specular * m_sun_brightness);
+        //Direkciono svetlo
+        shader->set_vec3("dirLight.direction", m_moon_direction);
+        shader->set_vec3("dirLight.diffuse", m_moon_color * m_moon_brightness);
+        shader->set_vec3("dirLight.ambient", m_moon_ambient * m_moon_brightness);
+        shader->set_vec3("dirLight.specular", m_moon_specular * m_moon_brightness);
+
+        //Point svetlo
+        shader->set_vec3("pointLight.position", glm::vec3(0.0f, 0.0f, 0.0f));
+        // Boje – topla paleta vatre
+        shader->set_vec3("pointLight.ambient", glm::vec3(0.15f, 0.05f, 0.01f)); // slabo osvetljenje okoline
+        shader->set_vec3("pointLight.diffuse", glm::vec3(1.0f, 0.45f, 0.05f));  // narandžasto/žuto jezgro
+        shader->set_vec3("pointLight.specular", glm::vec3(1.0f, 0.9f, 0.7f));   // topli odsjaj
+
+        // Attenuation
+        shader->set_float("pointLight.constant", 1.0f);
+        shader->set_float("pointLight.linear", 0.14f);
+        shader->set_float("pointLight.quadratic", 0.07f);
 
         shader->set_float("shininess", 64);
+
+        shader->set_float("time", platform->frame_time().current);
+
         shader->set_vec3("cameraPos", graphics->camera()->Position);
 
         watchtower->draw(shader);
@@ -156,6 +214,7 @@ namespace app {
 
     void MainController::draw() {
         draw_hut();
+        draw_fireplace();
         draw_axe();
     }
 
