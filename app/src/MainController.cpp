@@ -55,6 +55,19 @@ namespace app {
 
     }
 
+    void MainController::draw_skybox() {
+        auto shader      = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("skybox");
+        auto skybox_cube = engine::core::Controller::get<engine::resources::ResourcesController>()->skybox(
+                "skybox");
+
+        auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        graphics->draw_skybox(shader, skybox_cube);
+    }
+
     void MainController::update_camera() {
         auto gui_controller = engine::core::Controller::get<GUIController>();
         if (gui_controller->is_enabled())
@@ -216,6 +229,8 @@ namespace app {
         draw_hut();
         draw_fireplace();
         draw_axe();
+
+        draw_skybox();
     }
 
 } // app
