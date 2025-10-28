@@ -175,8 +175,8 @@ namespace app {
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
         auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
 
-        engine::resources::Model *watchtower = resources->model("axe");
-        engine::resources::Shader *shader    = resources->shader("axe");
+        engine::resources::Model *axe     = resources->model("axe");
+        engine::resources::Shader *shader = resources->shader("axe");
 
         shader->use();
         shader->set_mat4("projection", graphics->projection_matrix());
@@ -213,7 +213,74 @@ namespace app {
 
         shader->set_vec3("cameraPos", graphics->camera()->Position);
 
-        watchtower->draw(shader);
+        axe->draw(shader);
+    }
+
+    void MainController::setup_trees(int tree_count, float tree_radius = 1.0f, float inner_radius = 10.0f) {
+        if (trees_setup)
+            return;
+        trees_setup = true;
+
+        tree_model_matrices.reserve(tree_count);
+
+        float radial_step    = tree_radius * 2.5f;
+        float current_radius = inner_radius;
+
+        int placed_trees = 0;
+        while (placed_trees < tree_count) {
+
+            //Obim trenutnog prstena
+            float circumference = 2.0f * glm::pi<float>() * current_radius;
+
+            // Koliko stabala moze stati na taj obim
+            int trees_in_ring = static_cast<int>(circumference / (tree_radius * 2.0f));
+            if (trees_in_ring < 1)
+                trees_in_ring = 1;
+
+            // Raspodela po uglu
+            float angle_step = 2.0f * glm::pi<float>() / trees_in_ring;
+
+            float offset = static_cast<float>(rand()) / RAND_MAX * 10.0f;
+            for (int i = 0; i < trees_in_ring && placed_trees < tree_count; i++) {
+                float angle = i * angle_step + offset;
+
+                float x = cos(angle) * current_radius;
+                float z = sin(angle) * current_radius;
+
+                glm::mat4 model = glm::mat4(1.0f);
+                model           = glm::translate(model, glm::vec3(x, 0.0f, z));
+
+                // Random rotacija
+                float rotation = (float) (rand() % 360);
+
+                model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
+
+                tree_model_matrices.push_back(model);
+                placed_trees++;
+            }
+
+            current_radius += radial_step;
+        }
+
+    }
+
+    void MainController::draw_trees() {
+        setup_trees(200);
+
+        auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+        auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
+        engine::resources::Model *tree    = resources->model("tree");
+        engine::resources::Shader *shader = resources->shader("tree");
+
+        shader->use();
+        shader->set_mat4("projection", graphics->projection_matrix());
+        shader->set_mat4("view", graphics->camera()->view_matrix());
+
+        for (int i = 0; i < tree_model_matrices.size(); i++) {
+            shader->set_mat4("model", tree_model_matrices[i]);
+            tree->draw(shader);
+        }
     }
 
     void MainController::begin_draw() {
@@ -229,6 +296,7 @@ namespace app {
         draw_hut();
         draw_fireplace();
         draw_axe();
+        draw_trees();
 
         draw_skybox();
     }

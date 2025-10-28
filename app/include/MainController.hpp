@@ -29,18 +29,26 @@ namespace app {
 
         void draw_axe();
 
+        void setup_trees(int tree_count, float tree_radius, float inner_radius);
+
+        void draw_trees();
+
         void begin_draw() override;
 
         void draw() override;
 
         void end_draw() override;
 
-    public:
+    public
+    :
         glm::vec3 m_moon_direction{1.0f, 1.0f, 1.0f};
         glm::vec3 m_moon_color{1.0f, 1.0f, 1.0f};
         glm::vec3 m_moon_ambient{0.1f, 0.1f, 0.1f};
         glm::vec3 m_moon_specular{0.5f, 0.5f, 0.5f};
         float m_moon_brightness{0.9f};
+
+        bool trees_setup = false;
+        std::vector<glm::mat4> tree_model_matrices;
 
     };
 } // app
