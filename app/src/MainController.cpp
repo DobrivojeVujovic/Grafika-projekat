@@ -14,6 +14,7 @@
 #include <spdlog/spdlog.h>
 
 #include "../../engine/libs/glad/include/glad/glad.h"
+#include "../../engine/libs/glfw/include/GLFW/glfw3.h"
 
 namespace app {
 
@@ -62,11 +63,17 @@ namespace app {
 
     void MainController::initialize() {
         auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+        auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+
         platform->register_platform_event_observer(std::make_unique<MainPlatformEventObserver>());
         engine::graphics::OpenGL::enable_depth_testing();
 
-        // GLFWwindow *window_handle = platform->window()->handle_();
-        // glfwSetInputMode(window_handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        GLFWwindow *window_handle = platform->window()->handle_();
+        glfwSetWindowTitle(window_handle, "Barbarian camp");
+
+        graphics->camera()->move_camera(engine::graphics::Camera::LEFT, 1.0f);
+        graphics->camera()->move_camera(engine::graphics::Camera::UP, .4f);
+
         spdlog::info("MainController initialized");
     }
 
@@ -311,7 +318,7 @@ namespace app {
     }
 
     void MainController::draw_trees() {
-        //zbog brzine
+        //zbog FPS-a
         setup_trees(500);
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
