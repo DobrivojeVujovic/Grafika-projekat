@@ -47,9 +47,15 @@ namespace app {
         glm::vec3 m_moon_specular{0.5f, 0.5f, 0.5f};
         float m_moon_brightness{0.9f};
 
-        bool trees_setup{false};
+        bool m_trees_setup{false};
         std::vector<glm::mat4> m_tree_model_matrices;
 
+        bool m_axe_visible{true};
+        float m_axe_appear_time{0.0f};    // vreme kada je dugme pritisnuto
+        float m_axe_disappear_time{0.0f}; // vreme kada je dugme pritisnuto
+
+        bool m_axe_appear_pending{false};
+        bool m_axe_disappear_pending{false};
     };
 } // app
 

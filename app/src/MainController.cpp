@@ -15,12 +15,13 @@
 
 #include "../../engine/libs/glad/include/glad/glad.h"
 
-
 namespace app {
 
     class MainPlatformEventObserver : public engine::platform::PlatformEventObserver {
     public:
         void on_mouse_move(engine::platform::MousePosition position) override;
+
+        void on_key(engine::platform::Key key) override;
     };
 
     void MainPlatformEventObserver::on_mouse_move(engine::platform::MousePosition position) {
@@ -28,6 +29,30 @@ namespace app {
         if (!gui_controller->is_enabled()) {
             auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
             camera->rotate_camera(position.dx, position.dy);
+        }
+    }
+
+    void MainPlatformEventObserver::on_key(engine::platform::Key key) {
+        // spdlog::info("KEY");
+        auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+
+        //prikazi sekiru
+        if (key.id() == engine::platform::KeyId::KEY_V && key.state() == engine::platform::Key::State::Pressed) {
+            spdlog::info("V key pressed");
+            auto main_ctrl                     = engine::core::Controller::get<MainController>();
+            main_ctrl->m_axe_appear_pending    = true;
+            main_ctrl->m_axe_disappear_pending = false;
+            main_ctrl->m_axe_appear_time       = platform->frame_time().current;
+        }
+
+        //ukloni sekiru
+        if (key.id() == engine::platform::KeyId::KEY_B && key.state() == engine::platform::Key::State::Pressed) {
+            spdlog::info("B key pressed");
+            auto main_ctrl                     = engine::core::Controller::get<MainController>();
+            main_ctrl->m_axe_disappear_pending = true;
+            main_ctrl->m_axe_appear_pending    = false;
+            main_ctrl->m_axe_disappear_time    = platform->frame_time().current;
+
         }
     }
 
@@ -104,6 +129,24 @@ namespace app {
 
     void MainController::update() {
         update_camera();
+
+        if (m_axe_appear_pending) {
+            auto current_time = engine::core::Controller::get<engine::platform::PlatformController>()->frame_time().
+                    current;
+
+            if (current_time - m_axe_appear_time >= 1.0f) {
+                m_axe_visible        = true;
+                m_axe_appear_pending = false; // resetuj pending
+            }
+        } else if (m_axe_disappear_pending) {
+            auto current_time = engine::core::Controller::get<engine::platform::PlatformController>()->frame_time().
+                    current;
+
+            if (current_time - m_axe_disappear_time >= 1.0f) {
+                m_axe_visible        = false;
+                m_axe_appear_pending = false; // resetuj pending
+            }
+        }
     }
 
     void MainController::draw_fireplace() {
@@ -171,6 +214,9 @@ namespace app {
     }
 
     void MainController::draw_axe() {
+        if (!m_axe_visible)
+            return;
+
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
         auto platform  = engine::core::Controller::get<engine::platform::PlatformController>();
@@ -217,9 +263,9 @@ namespace app {
     }
 
     void MainController::setup_trees(int tree_count, float tree_radius = 1.0f, float inner_radius = 10.0f) {
-        if (trees_setup)
+        if (m_trees_setup)
             return;
-        trees_setup = true;
+        m_trees_setup = true;
 
         m_tree_model_matrices.reserve(tree_count);
 
@@ -254,7 +300,7 @@ namespace app {
                 float rotation = (float) (rand() % 360);
 
                 model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
+                model = glm::scale(model, glm::vec3(1.5f, 1.5f, 1.5f));
                 m_tree_model_matrices.push_back(model);
                 placed_trees++;
             }
@@ -265,7 +311,8 @@ namespace app {
     }
 
     void MainController::draw_trees() {
-        setup_trees(1500);
+        //zbog brzine
+        setup_trees(500);
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
