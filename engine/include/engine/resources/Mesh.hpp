@@ -31,7 +31,6 @@ namespace engine::resources {
     class Mesh {
         friend class AssimpSceneProcessor;
     public:
-
         /**
         * @brief Draws the mesh using a given shader. Called by the @ref Model::draw function to draw all the meshes in the model.
         * @param shader The shader to use for drawing.
@@ -42,6 +41,12 @@ namespace engine::resources {
         * @brief Destroys the mesh in the OpenGL context.
         */
         void destroy();
+
+        void setup_instances(const std::vector<glm::mat4> &model_matrices);
+
+        void draw_instanced(const Shader *shader, unsigned int instance_count);
+
+        void destroy_instance_vbo();
 
     private:
         /**
@@ -56,6 +61,8 @@ namespace engine::resources {
         uint32_t m_vao{0};
         uint32_t m_num_indices{0};
         std::vector<Texture *> m_textures;
+
+        uint32_t m_instance_vbo{0};
     };
 } // namespace engine
 
