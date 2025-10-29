@@ -47,8 +47,8 @@ namespace app {
         glm::vec3 m_moon_specular{0.5f, 0.5f, 0.5f};
         float m_moon_brightness{0.9f};
 
-        bool trees_setup = false;
-        std::vector<glm::mat4> tree_model_matrices;
+        bool trees_setup{false};
+        std::vector<glm::mat4> m_tree_model_matrices;
 
     };
 } // app

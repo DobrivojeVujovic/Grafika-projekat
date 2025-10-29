@@ -9,12 +9,12 @@
 #include <engine/resources/ResourcesController.hpp>
 
 #include "MainController.hpp"
-
 #include <GUIController.hpp>
 #include <X11/X.h>
 #include <spdlog/spdlog.h>
 
 #include "../../engine/libs/glad/include/glad/glad.h"
+
 
 namespace app {
 
@@ -221,7 +221,7 @@ namespace app {
             return;
         trees_setup = true;
 
-        tree_model_matrices.reserve(tree_count);
+        m_tree_model_matrices.reserve(tree_count);
 
         float radial_step    = tree_radius * 2.5f;
         float current_radius = inner_radius;
@@ -255,7 +255,7 @@ namespace app {
 
                 model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
-                tree_model_matrices.push_back(model);
+                m_tree_model_matrices.push_back(model);
                 placed_trees++;
             }
 
@@ -265,8 +265,7 @@ namespace app {
     }
 
     void MainController::draw_trees() {
-        setup_trees(200);
-
+        setup_trees(1500);
         auto resources = engine::core::Controller::get<engine::resources::ResourcesController>();
         auto graphics  = engine::core::Controller::get<engine::graphics::GraphicsController>();
 
@@ -277,10 +276,7 @@ namespace app {
         shader->set_mat4("projection", graphics->projection_matrix());
         shader->set_mat4("view", graphics->camera()->view_matrix());
 
-        for (int i = 0; i < tree_model_matrices.size(); i++) {
-            shader->set_mat4("model", tree_model_matrices[i]);
-            tree->draw(shader);
-        }
+        tree->draw_instanced(shader, m_tree_model_matrices);
     }
 
     void MainController::begin_draw() {
