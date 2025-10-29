@@ -1,11 +1,26 @@
 {
   "resources": {
     "models": {
+      "tree": {
+        "path": "tree/tree.obj"
+      },
+      "hut": {
+        "path": "hut/hut.obj",
+        "flip_uvs": true
+      },
+      "axe": {
+        "path": "axe/axe.obj",
+        "flip_uvs": true
+      },
+      "fireplace": {
+        "path": "fireplace/fireplace.obj",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
-    "height": 600,
+    "height": 900,
     "title": "Hello, window!",
-    "width": 800
+    "width": 1600
   }
 }
