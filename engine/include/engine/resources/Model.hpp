@@ -29,8 +29,6 @@ namespace engine::resources {
         */  
         void destroy();
 
-        void draw_instanced(const Shader *shader, const std::vector<glm::mat4> &model_matrices);
-
         /**
         * @brief Returns the meshes in the model.
         * @returns The meshes in the model.
@@ -50,7 +48,7 @@ namespace engine::resources {
         /**
         * @brief Returns the name of the model by which it can be referenced using the @ref engine::resources::ResourcesController::model function.
         * @returns The name of the model.
-        */
+        */  
         const std::string &name() const {
             return m_name;
         }
@@ -58,15 +56,15 @@ namespace engine::resources {
     private:
         /**
         * @brief The meshes in the model.
-        */
+        */                      
         std::vector<Mesh> m_meshes;
         /**
         * @brief The path to the model file from which the model was loaded.
-        */
+        */  
         std::filesystem::path m_path;
         /**
         * @brief The name of the model by which it can be referenced using the @ref engine::resources::ResourcesController::model function.
-        */
+        */  
         std::string m_name;
 
         Model() = default;
@@ -76,7 +74,7 @@ namespace engine::resources {
         * @param meshes The meshes in the model.
         * @param path The path to the model file from which the model was loaded.
         * @param name The name of the model by which it can be referenced using the @ref engine::resources::ResourcesController::model function.
-        */
+        */  
         Model(std::vector<Mesh> meshes, std::filesystem::path path,
               std::string name) : m_meshes(std::move(meshes))
                               , m_path(std::move(path))
