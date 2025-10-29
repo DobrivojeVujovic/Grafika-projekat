@@ -16,12 +16,4 @@ namespace engine::resources {
             mesh.destroy();
         }
     }
-
-    void Model::draw_instanced(const Shader *shader, const std::vector<glm::mat4> &model_matrices) {
-        shader->use();
-        for (auto &mesh: m_meshes) {
-            mesh.setup_instances(model_matrices);
-            mesh.draw_instanced(shader, model_matrices.size());
-        }
-    }
 }
